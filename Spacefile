@@ -1,0 +1,7 @@
+# Spacefile Docs: https://go.deta.dev/docs/spacefile/v0
+v: 0
+micros:
+    - name: learn_rack_fastapi
+      src: .
+      engine: python3.9
+      primary: true

@@ -1,0 +1,96 @@
+from flask import Flask, request, jsonify, render_template, redirect
+from deta import Deta
+import requests
+
+deta = Deta() 
+app = Flask(__name__)
+
+
+invidious_base_url = 'https://inv.riverside.rocks'
+
+@app.route('/')
+def index():
+    courses = deta.Base('courses').fetch().items
+    for i in courses:
+        i['complete_percentage'] = round((len(i['watched'])/i['videoCount'])*100)
+    return render_template('dashboard.html', courses=courses)
+
+
+@app.route('/create_course', methods=['GET'])
+def create_course():
+    return render_template('new_course.html')
+
+@app.route('/new_course', methods=['POST'])
+def new_course():
+        url = request.form['url']
+        playlist_id= url.split('=')[1]
+        invidious_url = f'https://inv.riverside.rocks/api/v1/playlists/{playlist_id}'
+        r = requests.get(invidious_url)
+        data = r.json()
+        watched = {'watched': []}
+        data.update(watched)
+        data['playlistThumbnail'] = data['playlistThumbnail'].replace('hqdefault', 'maxresdefault')
+        base = deta.Base('courses')
+        base.put(data)
+        return redirect('/')
+
+@app.route('/course/<id>', methods=['GET'])
+def course(id):
+    course = deta.Base('courses').fetch({'key': id}).items[0]
+    all_videos = course['videos']
+    watched = course['watched']
+    unwatched = [i for i in all_videos if i not in watched]
+    current_video = unwatched[0]
+    try:
+        next_video = unwatched[1]
+    except:
+        next_video = None
+    try:
+        previous_video = watched[-1]
+    except:
+        previous_video = None
+    complete_percentage = round((len(watched)/course['videoCount'])*100)
+    return render_template('course.html', course=course, current_video=current_video, next=next_video, prev=previous_video, complete_percentage=complete_percentage)
+
+@app.route('/course/<id>/watched', methods=['POST'])
+def watched(id):
+    base = deta.Base('courses')
+    course = base.fetch({'key': id}).items[0]
+    watched = course['watched']
+    watched.append(request.form['video'])
+    base.update({'watched': watched}, id)
+    return jsonify({'success': True})
+
+@app.route('/course/<id>/unwatched', methods=['POST'])
+def unwatched(id):
+    base = deta.Base('courses')
+    course = base.fetch({'key': id}).items[0]
+    watched = course['watched']
+    watched.remove(request.form['video'])
+    base.update({'watched': watched}, id)
+    return jsonify({'success': True})
+
+@app.route('/course/<id>/video/<video_id>', methods=['GET'])
+def video(id, video_id):
+    course = deta.Base('courses').fetch({'key': id}).items[0]
+    all_videos = course['videos']
+    video = [i for i in all_videos if i['videoId'] == video_id][0]
+    video_api_url = f'https://inv.riverside.rocks/api/v1/videos/{video_id}'
+    r = requests.get(video_api_url)
+    video_data = r.json()
+    description = video_data['description'].replace('\n', '<br>')
+    return render_template('vid.html', course=course, video=video, inv_url=invidious_base_url, description=description, all_videos=all_videos)
+
+@app.route('/course/<id>/notes', methods=['POST'])
+def notes(id):
+    updated_notes = request.form['textarea']
+    base = deta.Base('courses')
+    base.update({'notes': updated_notes}, id)
+    return jsonify({'success': True})
+
+
+@app.route('/course/notes/<id>', methods=['GET'])
+def get_notes(id):
+    course = deta.Base('courses').fetch({'key': id}).items[0]
+    notes = course['notes']
+    return render_template('course_notes.html', course=course, notes=notes)

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="flex    ">
+    <div id="video" class="w-[60%] m-10 bg-[#111827] rounded-lg">
+        <iframe class="w-full" height="600" src="{{inv_url}}/embed/{{video.videoId}}" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <a href="#">
+        <button class="text-white px-5 py-2 text-2xl bg-blue-800 rounded mt-5 ml-[86%]"> <a href="#">Next Video </a> </button>
+        </a>
+    </div>
+    <div class="w-[27%] m-10 bg-gray-500/40 rounded-lg px-5">
+        <center><h1 class="text-2xl text-white">Course Notes</h1></center>
+        <form method="POST">
+        <textarea class="w-full h-[540] resize-none bg-gray-500 p-3" id="textarea" name="textarea">{{course.notes}}</textarea>
+        <input type="hidden" name="course_id" value="{{course.id}}">
+        <center>
+            <button id="sub" name="sub" value="save" class="text-white px-5 py-2 text-2xl bg-blue-800 rounded mt-5" type="submit">Save</button></center>
+        </form>
+    </div>
+</div>
+
+
+<div class="flex mt-2">
+    <div class="w-[60%] m-10 bg-gray-500/40 text-white p-2 rounded-lg text-5xl">
+        {{video.title}}
+        <hr class="border-1 border-white">
+        <span class="text-base font-thin font-mono"><p>{{description|safe}}<p><span>
+    </div>
+    <div class="w-[27%] m-10 bg-gray-500/40 rounded-lg px-5 h-3/4 overflow-y-scroll">
+        <center><h1 class="text-2xl text-white">All Videos</h1></center>
+        <hr class="border-1 border-white mb-2">
+        <div class="">
+        {% for video in all_videos %}
+        <div class="flex mb-2 my-10">
+        <a href="#">
+            <div class="w-[168] h-[94] mr-2">
+        <img width="168" height="94" class="rounded-lg hover:scale-110 hover:rounded-none ease-in duration-100" src="{{video.videoThumbnails.0.url}}" alt="thumbnail"></div></a>
+        <a href="#"><span class="text-white hover:text-[#5EE2D2] hover:underline">{{video.title}}</span></a>
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+    textarea {
+        font-family: 'Shadows Into Light', cursive;
+        font-size: 30px;    
+    }
+
+</style>
+<script>
+    $(document).ready(function () {
+        $("form").submit(function (event) {
+          var formData = {
+            textarea: $("#textarea").val(),
+          };
+      
+          $.ajax({
+            type: "POST",
+            url: "/course/{{course.key}}/notes",
+            data: formData,
+            dataType: "json",
+            encode: true,
+          }).done(function (data) {
+            console.log(data);
+          });
+      
+          event.preventDefault();
+        });
+      });
+</script>
+{% endblock %}

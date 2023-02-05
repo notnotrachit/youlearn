@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<center>
+<h1 class="text-white text-3xl underline m-20">{{course.title}}</h1>
+<button class="text-white px-5 text-2xl bg-blue-800 rounded py-2 my-2"> <a href="/course/notes/{{course.key}}">Course Notes </a> </button>
+</center>
+
+<div class="mt-18">
+    <div style="align-items: center;" class="flex justify-evenly content-center place-content-center align-center">
+        {% if prev %}
+            <div class="relative bg-blue-700/30 p-5 rounded-lg w-[500] h-[270]">
+            <img style="object-fit:cover;object-position:cover;" class="rounded-lg w-full h-full " src="{{prev.videoThumbnails.0.url}}" alt="image2">
+            <center><span class="text-white">Previous Video</span></center>
+            </div>
+        {% endif %}
+        <a href="/course/{{course.key}}/video/{{current_video.videoId}}">
+            <div class="bg-blue-200/70 p-5 rounded-lg w-[560] h-[315]">
+            <img style="object-fit:cover;object-position:cover;" class="rounded-lg w-full h-full " src="{{current_video.videoThumbnails.0.url}}" alt="image2">
+            <center><span class="text-white">Continue Watching</span></center>        
+            </div>
+        <a>
+        {%if next %}
+        <a href="#">
+            <div class="bg-blue-700/30 p-5 rounded-lg w-[500] h-[270]">
+            <img style="object-fit:cover;object-position:cover;" class="rounded-lg w-full h-full " src="{{next.videoThumbnails.0.url}}" alt="image3">
+            <center><span class="text-white">Upcoming Video</span></center>
+            </div>
+        </a>
+        {% endif %}
+    </div>
+<div>
+<center>
+<div class="text-3xl text-white my-10">
+    Progress: {{complete_percentage}}%
+</div>
+
+<button class="text-white px-5 py-2 text-2xl bg-blue-800 rounded"> <a href="#">Continue </a> </button>
+</center>
+
+{% endblock %}
