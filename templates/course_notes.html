@@ -4,17 +4,16 @@
 <center>
 <h1 class="text-5xl text-white py-10 underline"> Course Notes </h1>
 
-<form action="" method="POST">
+<form action="/course/{{course.key}}/notes" method="POST">
   <div class="w-5/6 justify-end flex">
   <button type="submit" id="sub" name="sub" value="save" class="text-xl text-white hover:text-[#5EE2D2]">
     Save Changes
   </button><br></div>
   <textarea id="textarea" name="textarea" class="w-5/6 h-[63%] text-2xl p-5 backdrop-blur-xl bg-[#eaedd8]/60 ">{{ course.notes }}
   </textarea>
-  <input type="hidden" name="course_id" value="{{ course.id }}">
-  <button id="sub" name="sub" type="submit" value="download" class="bg-white rounded m-5 text-4xl px-5 py-2 border border-2 border-black hover:bg-[#5EE2D2] hover:text-black hover:border-black">
+  <!--<button id="sub" name="sub" type="submit" value="download" class="bg-white rounded m-5 text-4xl px-5 py-2 border border-2 border-black hover:bg-[#5EE2D2] hover:text-black hover:border-black">
     Download as PDF
-  </button>
+  </button>-->
 </form>
 
 
@@ -33,9 +32,7 @@
       background-repeat: no-repeat;
       background-size: cover;
     }
-    textarea {
-      font-family: 'Shadows Into Light';
-    }
+
 </style>
 
-  {% endblock %}  
+  {% endblock %}
