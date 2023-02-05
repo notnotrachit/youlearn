@@ -1,9 +1,8 @@
 ---
-title: ""
-tagline: "Your own personal computer in the cloud: private, secure & always online."
-theme_color: "#f26daa"
+title: "YouLearn"
+tagline: "Coursera like experience for youtube playlists"
+theme_color: "#1E40AF"
 git: "https://github.com/notnotrachit/youlearn"
-homepage: "https://deta.space"
 ---
 
 ## YouLearn
