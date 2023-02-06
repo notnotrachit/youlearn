@@ -8,9 +8,16 @@ app = Flask(__name__)
 
 invidious_base_url = 'https://inv.riverside.rocks'
 
+def get_invidious_url():
+    inv_api="https://api.invidious.io/instances.json?pretty=1&sort_by=api,health"
+    r = requests.get(inv_api)
+    data = r.json()
+    return(data[0][1]['uri'])
+
 @app.route('/')
 def index():
     courses = deta.Base('courses').fetch().items
+    invidious_base_url = get_invidious_url()
     for i in courses:
         i['complete_percentage'] = round((len(i['watched'])/i['videoCount'])*100)
     return render_template('dashboard.html', courses=courses)
@@ -24,7 +31,8 @@ def create_course():
 def new_course():
         url = request.form['url']
         playlist_id= url.split('=')[1]
-        invidious_url = f'https://inv.riverside.rocks/api/v1/playlists/{playlist_id}'
+        invidious_base_url = get_invidious_url()
+        invidious_url = f'{invidious_base_url}/api/v1/playlists/{playlist_id}'
         r = requests.get(invidious_url)
         data = r.json()
         watched = {'watched': []}
@@ -36,6 +44,7 @@ def new_course():
 
 @app.route('/course/<id>', methods=['GET'])
 def course(id):
+    invidious_base_url = get_invidious_url()
     course = deta.Base('courses').fetch({'key': id}).items[0]
     all_videos = course['videos']
     watched = course['watched']
@@ -72,10 +81,11 @@ def unwatched(id):
 
 @app.route('/course/<id>/video/<video_id>', methods=['GET'])
 def video(id, video_id):
+    invidious_base_url = get_invidious_url()
     course = deta.Base('courses').fetch({'key': id}).items[0]
     all_videos = course['videos']
     video = [i for i in all_videos if i['videoId'] == video_id][0]
-    video_api_url = f'https://inv.riverside.rocks/api/v1/videos/{video_id}'
+    video_api_url = f'{invidious_base_url}/api/v1/videos/{video_id}'
     r = requests.get(video_api_url)
     video_data = r.json()
     description = video_data['description'].replace('\n', '<br>')
