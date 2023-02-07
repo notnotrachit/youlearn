@@ -3,7 +3,9 @@ from deta import Deta
 import requests
 
 deta = Deta() 
-app = Flask(__name__)
+app = Flask(__name__,
+            static_url_path='/static', 
+            static_folder='static')
 
 
 invidious_base_url = 'https://inv.riverside.rocks'

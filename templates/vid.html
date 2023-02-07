@@ -34,7 +34,7 @@
         <div class="flex mb-2 my-10">
         <a href="#">
             <div class="w-[168] h-[94] mr-2">
-        <img width="168" height="94" class="rounded-lg hover:scale-110 hover:rounded-none ease-in duration-100" src="{{video.videoThumbnails.3.url}}" alt="thumbnail"></div></a>
+        <img width="168" height="94" class="rounded-lg hover:scale-110 hover:rounded-none ease-in duration-100" src="{{video.videoThumbnails.5.url}}" alt="thumbnail"></div></a>
         <a href="#"><span class="text-white hover:text-[#5EE2D2] hover:underline">{{video.title}}</span></a>
         </div>
         {% endfor %}
@@ -45,11 +45,9 @@
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
-    textarea {
-        font-family: 'Shadows Into Light', cursive;
-        font-size: 30px;    
+    .tox-promotion{
+        display: none;
     }
-
 </style>
 <script>
     $(document).ready(function () {
@@ -72,4 +70,45 @@
         });
       });
 </script>
+<!--
+<script src="https://cdn.jsdelivr.net/npm/lexical@0.7.7/Lexical.min.js"></script>
+<script>
+    import {createEditor} from 'lexical';
+
+    const config = {
+      namespace: 'MyEditor',
+      onError: console.error
+    };
+    
+    const editor = createEditor(config);
+    const contentEditableElement = document.getElementById('textare');
+
+    editor.setRootElement(contentEditableElement);
+</script>-->
+<script src="/static/tinymce.min.js"></script>
+<script>
+  tinymce.init({
+    selector: 'textarea',
+    plugins: 'anchor autoresize code codesample insertdatetime autolink charmap autosave codesample emoticons image link lists media searchreplace table visualblocks wordcount typography',
+    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+    menu: {
+        file: { title: 'File', items: 'preview | export print | deleteallconversations' },
+        edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
+        view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen' },
+        insert: { title: 'Insert', items: 'image link media addcomment pageembed template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime' },
+        format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript codeformat | styles blocks fontfamily fontsize align lineheight | forecolor backcolor | language | removeformat' },
+        tools: { title: 'Tools', items: 'spellchecker spellcheckerlanguage | a11ycheck code wordcount' },
+        table: { title: 'Table', items: 'inserttable | cell row column | advtablesort | tableprops deletetable' },
+        help: { title: 'Help', items: 'help' }
+      }  
+});
+</script>
+<!--<script src="https://cdn.ckeditor.com/ckeditor5/36.0.0/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create( document.querySelector( '#textarea' ) )
+        .catch( error => {
+            console.error( error );
+        } );
+</script>-->
 {% endblock %}
