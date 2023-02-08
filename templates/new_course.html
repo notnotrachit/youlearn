@@ -5,7 +5,7 @@
 <div class="login-box">
     <h2>ADD PLAYLIST</h2>
     <p>Enter <span class="you">You</span><span class="tube">Tube</span> playlist URL</p>
-    <form action="/new_course" method="POST">
+    <form>
       <div class="user-box">
         <input type="text" name="url" id="url" required>
         <label>URL</label>
@@ -15,7 +15,7 @@
         <span></span>
         <span></span>
         <span></span>
-        Submit
+        <p id="submit_text">Submit</p>
       </button></center>
     </form>
   </div>
@@ -216,7 +216,37 @@
     } */
   </style>
 
+  <script>
+    $(document).ready(function () {
+        $("form").submit(function (event) {
+          var sub_btn = document.getElementById("submit_text");
+          sub_btn.innerHTML = "<img src='/static/loading.svg' width='20px' height='20px'>";
+          var formData = {
+            url: $("#url").val(),
+          };
+      
+          $.ajax({
+            type: "POST",
+            url: "/new_course",
+            data: formData,
+            dataType: "json",
+            encode: true,
+          }).done(function (data) {
+            if (data.success) {
+              alert("Course added successfully");
+              window.location.href = "/";
+              sub_btn.innerHTML = "Submit";
+            } else {
+              alert(data.error);
+              sub_btn.innerHTML = "Submit";
+            }
+          });
 
+      
+          event.preventDefault();
+        });
+      });
+</script>
 
 
 

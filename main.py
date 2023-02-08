@@ -32,17 +32,20 @@ def create_course():
 @app.route('/new_course', methods=['POST'])
 def new_course():
         url = request.form['url']
-        playlist_id= url.split('=')[1]
-        invidious_base_url = get_invidious_url()
-        invidious_url = f'{invidious_base_url}/api/v1/playlists/{playlist_id}'
-        r = requests.get(invidious_url)
-        data = r.json()
-        watched = {'watched': []}
-        data.update(watched)
-        data['playlistThumbnail'] = data['playlistThumbnail'].replace('hqdefault', 'maxresdefault')
-        base = deta.Base('courses')
-        base.put(data)
-        return redirect('/')
+        if url.startswith('https://www.youtube.com/playlist?')==False:
+            return jsonify({'success': False, 'error': 'Please enter a valid YouTube playlist URL'})
+        else:
+            playlist_id= url.split('=')[1]
+            invidious_base_url = get_invidious_url()
+            invidious_url = f'{invidious_base_url}/api/v1/playlists/{playlist_id}'
+            r = requests.get(invidious_url)
+            data = r.json()
+            watched = {'watched': []}
+            data.update(watched)
+            data['playlistThumbnail'] = data['playlistThumbnail'].replace('hqdefault', 'maxresdefault')
+            base = deta.Base('courses')
+            base.put(data)
+            return jsonify({'success': True})
 
 @app.route('/course/<id>', methods=['GET'])
 def course(id):
@@ -106,3 +109,21 @@ def get_notes(id):
     course = deta.Base('courses').fetch({'key': id}).items[0]
     notes = course['notes']
     return render_template('course_notes.html', course=course, notes=notes)
+
+
+@app.route('/__space/v0/actions', methods=['POST'])
+def actions():
+    action = request.json
+    if action['event']['id'] == 'update_playlists':
+        all_courses = deta.Base('courses').fetch().items
+        for i in all_courses:
+            playslist_id = i['playlistId']
+            invidious_base_url = get_invidious_url()
+            invidious_url = f'{invidious_base_url}/api/v1/playlists/{playlist_id}'
+            r = requests.get(invidious_url)
+            data = r.json()
+            videos = data['videos']
+            video_count = data['videoCount']
+            base = deta.Base('courses')
+            base.update({'videos': videos, 'videoCount': video_count}, i['key'])
+        return jsonify({'success': True})

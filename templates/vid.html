@@ -8,10 +8,10 @@
         <button class="text-white px-5 py-2 text-2xl bg-blue-800 rounded mt-5 ml-[86%]"> <a href="#">Next Video </a> </button>
         </a>
     </div>
-    <div class="w-[27%] m-10 bg-gray-500/40 rounded-lg px-5">
+    <div class="w-[27%] m-10 bg-gray-500/40 rounded-lg px-5 max-h-full" height="600">
         <center><h1 class="text-2xl text-white">Course Notes</h1></center>
         <form method="POST">
-        <textarea class="w-full h-[540] resize-none bg-gray-500 p-3" id="textarea" name="textarea">{{course.notes}}</textarea>
+        <textarea class="w-full resize-none bg-gray-500 p-3" id="textarea" name="textarea">{{course.notes}}</textarea>
         <input type="hidden" name="course_id" value="{{course.id}}">
         <center>
             <button id="sub" name="sub" value="save" class="text-white px-5 py-2 text-2xl bg-blue-800 rounded mt-5" type="submit">Save</button></center>
@@ -88,8 +88,10 @@
 <script src="/static/tinymce.min.js"></script>
 <script>
   tinymce.init({
+    resize: false,
+    height: "700px",
     selector: 'textarea',
-    plugins: 'anchor autoresize code codesample insertdatetime autolink charmap autosave codesample emoticons image link lists media searchreplace table visualblocks wordcount typography',
+    plugins: 'anchor code codesample insertdatetime autolink charmap autosave codesample emoticons image link lists media searchreplace table visualblocks wordcount typography',
     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
     menu: {
         file: { title: 'File', items: 'preview | export print | deleteallconversations' },
@@ -100,7 +102,7 @@
         tools: { title: 'Tools', items: 'spellchecker spellcheckerlanguage | a11ycheck code wordcount' },
         table: { title: 'Table', items: 'inserttable | cell row column | advtablesort | tableprops deletetable' },
         help: { title: 'Help', items: 'help' }
-      }  
+      },
 });
 </script>
 <!--<script src="https://cdn.ckeditor.com/ckeditor5/36.0.0/classic/ckeditor.js"></script>
