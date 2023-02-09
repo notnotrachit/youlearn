@@ -14,7 +14,8 @@ def get_invidious_url():
     inv_api="https://api.invidious.io/instances.json?pretty=1&sort_by=api,health"
     r = requests.get(inv_api)
     data = r.json()
-    return(data[0][1]['uri'])
+    #return(data[0][1]['uri'])
+    return "https://inv.riverside.rocks/"
 
 @app.route('/')
 def index():
@@ -66,14 +67,21 @@ def course(id):
     complete_percentage = round((len(watched)/course['videoCount'])*100)
     return render_template('course.html', course=course, current_video=current_video, next=next_video, prev=previous_video, complete_percentage=complete_percentage)
 
-@app.route('/course/<id>/watched', methods=['POST'])
-def watched(id):
+@app.route('/course/<id>/video/<video_id>/watched', methods=['GET'])
+def watched(id, video_id):
     base = deta.Base('courses')
     course = base.fetch({'key': id}).items[0]
     watched = course['watched']
-    watched.append(request.form['video'])
+    video = [i for i in course['videos'] if i['videoId'] == video_id][0]
+    watched.append(video)
     base.update({'watched': watched}, id)
-    return jsonify({'success': True})
+    all_videos = course['videos']
+    unwatched = [i for i in all_videos if i not in watched]
+    try:
+        next_video = unwatched[1]
+    except:
+        next_video = None
+    return redirect(f'/course/{id}/video/{next_video["videoId"]}')
 
 @app.route('/course/<id>/unwatched', methods=['POST'])
 def unwatched(id):
@@ -117,7 +125,7 @@ def actions():
     if action['event']['id'] == 'update_playlists':
         all_courses = deta.Base('courses').fetch().items
         for i in all_courses:
-            playslist_id = i['playlistId']
+            playlist_id = i['playlistId']
             invidious_base_url = get_invidious_url()
             invidious_url = f'{invidious_base_url}/api/v1/playlists/{playlist_id}'
             r = requests.get(invidious_url)

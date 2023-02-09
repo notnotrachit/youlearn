@@ -4,8 +4,8 @@
 <div class="flex    ">
     <div id="video" class="w-[60%] m-10 bg-[#111827] rounded-lg">
         <iframe class="w-full" height="600" src="{{inv_url}}/embed/{{video.videoId}}" title="YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        <a href="#">
-        <button class="text-white px-5 py-2 text-2xl bg-blue-800 rounded mt-5 ml-[86%]"> <a href="#">Next Video </a> </button>
+        <a href="/course/{{course.key}}/video/{{video.videoId}}/watched">
+        <button class="text-white px-5 py-2 text-2xl bg-blue-800 rounded mt-5 ml-[86%]">Next Video</button>
         </a>
     </div>
     <div class="w-[27%] m-10 bg-gray-500/40 rounded-lg px-5 max-h-full" height="600">
@@ -89,7 +89,7 @@
 <script>
   tinymce.init({
     resize: false,
-    height: "700px",
+    height: "500px",
     selector: 'textarea',
     plugins: 'anchor code codesample insertdatetime autolink charmap autosave codesample emoticons image link lists media searchreplace table visualblocks wordcount typography',
     toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
