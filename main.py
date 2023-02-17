@@ -11,9 +11,9 @@ app = Flask(__name__,
 invidious_base_url = 'https://inv.riverside.rocks'
 
 def get_invidious_url():
-    inv_api="https://api.invidious.io/instances.json?pretty=1&sort_by=api,health"
-    r = requests.get(inv_api)
-    data = r.json()
+    # inv_api="https://api.invidious.io/instances.json?pretty=1&sort_by=api,health"
+    # r = requests.get(inv_api)
+    # data = r.json()
     #return(data[0][1]['uri'])
     return "https://inv.riverside.rocks/"
 
@@ -65,7 +65,7 @@ def course(id):
     except:
         previous_video = None
     complete_percentage = round((len(watched)/course['videoCount'])*100)
-    return render_template('course.html', course=course, current_video=current_video, next=next_video, prev=previous_video, complete_percentage=complete_percentage)
+    return render_template('course.html', course=course, current_video=current_video, next=next_video, prev=previous_video, complete_percentage=complete_percentage, inv_url=get_invidious_url())
 
 @app.route('/course/<id>/video/<video_id>/watched', methods=['GET'])
 def watched(id, video_id):
