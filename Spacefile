@@ -12,4 +12,4 @@ micros:
           trigger: "schedule"
           default_interval: "0 10 * * *"
 app_name: YouLearn
-icon: logo1.png
+icon: logo.webp

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+<center>
+<h1 class="text-4xl text-white">Search</h1>
+</center>
+<form action="/search" method="get">
+<center>
+<div class="flex flex-row justify-center place-center content-center">
+    <input type="text" name="q" class= "text-white w-1/2 py-5 mt-5 border-blue" placeholder="Search" value="{{ q }}" list="suggestions">
+    <input type="submit" value="Search" class="w-20 self-auto mx-5 my-0"/>
+</div>
+<datalist id="suggestions" class="bg-slate-800 text-white">
+<datalist>
+</center>
+</form>
+{% if q %}
+<center>
+<h2 class="text-2xl text-white mt-5">Results for {{ q }}</h2>
+</center>
+<div class="flex justify-items-center">
+    <div class="grid grid-cols-5 gap-7 m-5 w-full justify-self-cent er">
+    {% for result in results %}
+    <div class="result text-white w-42 bg-slate-800	rounded-2xl p-2">
+    <img src="{{result.playlistThumbnail | replace("hqdefault","mqdefault")}}" class="w-full rounded-2xl">
+    <a href="{{inv_url}}playlist?list={{ result.playlistId }}">{{ result.title }}</a>
+    <p>Channel: {{ result.author }}</p>
+    <p>Video Count: {{ result.videoCount }}</p>
+    <form action="/course/new_from_id" method="POST">
+    <input type="hidden" name="playlist_id" value="{{ result.playlistId }}">
+    <input type="submit" value="Add to your courses" class="place-self-end self-end	bottom-0"/>
+    </form>
+    </div>
+    {% endfor %}
+    <div>
+</div>
+{% endif %}
+
+<script>
+$(document).ready(function() {
+    $('input[name="q"]').keyup(function() {
+        var query;
+        query = $(this).val();
+        $.get('/api/search/suggestions', {q: query}, function(data) {
+            console.log(data)
+            for (var i = 0; i < data.length; i++) { 
+                
+                data[i] = '<option value="' + data[i] + '">';
+            }
+            $('datalist').html(data);
+        });
+    });
+});
+</script>
+<script>
+    $(document).ready(function () {
+        $("form").submit(function (event) {
+          var sub_btn = document.getElementById("submit_text");
+          sub_btn.innerHTML = "<img src='/static/loading.svg' width='20px' height='20px'>";
+          var formData = {
+            url: $("#url").val(),
+          };
+      
+          $.ajax({
+            type: "POST",
+            url: "/new_course",
+            data: formData,
+            dataType: "json",
+            encode: true,
+          }).done(function (data) {
+            if (data.success) {
+              alert("Course added successfully");
+              window.location.href = "/";
+              sub_btn.innerHTML = "Submit";
+            } else {
+              alert(data.error);
+              sub_btn.innerHTML = "Submit";
+            }
+          });
+
+      
+          event.preventDefault();
+        });
+      });
+</script>
+{% endblock %}
