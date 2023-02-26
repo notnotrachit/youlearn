@@ -123,13 +123,18 @@ def notes(id):
     updated_notes = request.form['textarea']
     base = deta.Base('courses')
     base.update({'notes': updated_notes}, id)
+    course_notes = base.fetch({'key': id}).items[0]['notes']
+    print(course_notes)
     return jsonify({'success': True})
 
 
 @app.route('/course/notes/<id>', methods=['GET'])
 def get_notes(id):
     course = deta.Base('courses').fetch({'key': id}).items[0]
-    notes = course['notes']
+    try:
+        notes = course['notes']
+    except:
+        notes = "Notes"
     return render_template('course_notes.html', course=course, notes=notes)
 
 
