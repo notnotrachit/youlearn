@@ -61,6 +61,13 @@ def new_from_id():
     base.put(data)
     return redirect('/')
 
+@app.route('/course/delete', methods=['POST'])
+def delete():
+    base = deta.Base('courses')
+    id = request.form['id']
+    base.delete(id)
+    return redirect('/')
+
 @app.route('/course/<id>', methods=['GET'])
 def course(id):
     invidious_base_url = get_invidious_url()
@@ -104,6 +111,8 @@ def unwatched(id):
     watched.remove(request.form['video'])
     base.update({'watched': watched}, id)
     return jsonify({'success': True})
+
+
 
 @app.route('/course/<id>/video/<video_id>', methods=['GET'])
 def video(id, video_id):

@@ -73,10 +73,7 @@
           console.log(data);
         });
   }
-  $(document).ready(function () {
-    var textarea_div = document.getElementById("textarea");
-    textarea_div.addEventListener("input", auto_save_notes);
-  });
+  setInterval(auto_save_notes, 1000);
 </script>
 <script src="/static/tinymce.min.js"></script>
 <script>
